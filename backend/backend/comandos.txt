@@ -1,0 +1,29 @@
+******************
+    ESSENCIAIS
+******************
+VAI SER NECESSÁRIO EXECUTAR ESSE COMANDO NO POWERSHELL ANTES DE EXECUTAR O PRÓXIMO COMANDO
+    Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+
+APÓS ATIVAR, EXECUTE ESSE COMANDO
+    .\env\Scripts\activate
+
+INSTALAR AS DEPENDÊNCIAS
+    (env) PS D:\Projetos\Python\PARQUE_TECNOLOGICO> pip install -r requirements.txt
+
+
+*****************************
+    AO LONGO DO PROJETO
+*****************************
+EXECUTEI O COMANDO 
+    (env) PS D:\Projetos\Python\PARQUE_TECNOLOGICO\backend> python manage.py makemigrations
+PARA FAZER A PASTA MIGRATIONS NO BACKEND; E EXECUTEI O COMANDO
+    (env) PS D:\Projetos\Python\PARQUE_TECNOLOGICO\backend> python manage.py migrate
+PARA FINALIZAR AS OPERAÇÕES DE MIGRAÇÃO PENDENTES NO PROJETO ( ISSO É, CONECTANDO A UMA DATABASE CRIADA POR ELE NA MESMA PASTA (db.sqlite3))
+
+
+
+*****************************
+    COMANDOS DE EXECUÇÃO 
+*****************************
+PARA RODAR O PROJETO (NA PASTA BACKEND) EXECUTE:
+    python manage.py runserver

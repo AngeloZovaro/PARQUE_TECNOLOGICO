@@ -8,22 +8,33 @@ APÓS ATIVAR, EXECUTE ESSE COMANDO
     .\env\Scripts\activate
 
 INSTALAR AS DEPENDÊNCIAS
-    (env) PS D:\Projetos\Python\PARQUE_TECNOLOGICO> pip install -r requirements.txt
+    pip install -r requirements.txt
+
+INSTALAR FRONTEND
+    npm create vite@latest frontend -- --template react
+    cd frontend
+    npm install
+    npm run dev
 
 
 *****************************
     AO LONGO DO PROJETO
 *****************************
 EXECUTEI O COMANDO 
-    (env) PS D:\Projetos\Python\PARQUE_TECNOLOGICO\backend> python manage.py makemigrations
-PARA FAZER A PASTA MIGRATIONS NO BACKEND; E EXECUTEI O COMANDO
-    (env) PS D:\Projetos\Python\PARQUE_TECNOLOGICO\backend> python manage.py migrate
+    \backend> python manage.py makemigrations
+PARA FAZER A PASTA MIGRATIONS NO BACKEND;
+E EXECUTEI O COMANDO
+    \backend> python manage.py migrate
 PARA FINALIZAR AS OPERAÇÕES DE MIGRAÇÃO PENDENTES NO PROJETO ( ISSO É, CONECTANDO A UMA DATABASE CRIADA POR ELE NA MESMA PASTA (db.sqlite3))
 
-
+UTILIZO ESSE COMANDO PARA ATUALIZAR O BANCO DE DADOS APÓS REALIZAR ALTERAÇÕES
+    \backend>python manage.py makemigrations
+    \backend> python manage.py migrate
 
 *****************************
     COMANDOS DE EXECUÇÃO 
 *****************************
-PARA RODAR O PROJETO (NA PASTA BACKEND) EXECUTE:
+PARA RODAR O BACKEND (NA PASTA BACKEND) EXECUTE:
     python manage.py runserver
+PARA RODAR O FRONTEND (NA PASTA FRONTEND) EXECUTE:
+    npm run dev

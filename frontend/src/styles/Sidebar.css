@@ -1,0 +1,78 @@
+.sidebar {
+  width: 220px; /* Um pouco mais largo para os ícones */
+  height: 100vh;
+  background-color: #1f2937; /* Tom de cinza escuro azulado */
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  border-right: 1px solid #374151;
+  box-sizing: border-box;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #f9fafb;
+  font-size: 1.2em;
+  font-weight: 600;
+  margin-bottom: 40px;
+}
+
+.sidebar-logo {
+  background-color: #38b2ac;
+  color: white;
+  border-radius: 8px;
+  padding: 8px;
+  font-weight: bold;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-grow: 1; /* Empurra o logout para o final */
+}
+
+.sidebar-link {
+  color: #d1d5db; /* Cinza claro para texto inativo */
+  text-decoration: none;
+  font-size: 1em;
+  padding: 12px 15px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Espaço entre ícone e texto */
+}
+
+.sidebar-link:hover {
+  background-color: #374151; /* Fundo de hover */
+  color: #f9fafb; /* Texto branco no hover */
+}
+
+/* Estilo para o link da página ativa */
+.sidebar-link.active {
+  background-color: #38b2ac;
+  color: white;
+  font-weight: 500;
+}
+
+.logout-link {
+  margin-top: auto; /* Coloca o link de logout no final da sidebar */
+}
+
+.main-content {
+  margin-left: 260px; /* Ajustado para a nova largura da sidebar + padding */
+  padding: 30px;
+  background-color: #111827; /* Fundo principal escuro, mas diferente da sidebar */
+  color: #d1d5db;
+  min-height: calc(100vh - 60px); 
+}
+
+.main-content h1, .main-content h2, .main-content h3 {
+  color: #f9fafb;
+}

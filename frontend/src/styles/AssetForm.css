@@ -1,0 +1,88 @@
+/* --- CONTAINER PRINCIPAL DO FORMULÁRIO --- */
+.asset-form-container {
+  background-color: #1f2937;
+  padding: 30px;
+  border-radius: 12px;
+  border: 1px solid #374151;
+  max-width: 700px; /* Limita a largura para melhor leitura */
+  margin: 0 auto; /* Centraliza o formulário na página */
+}
+
+.asset-form-container h2 {
+  margin-top: 0;
+  margin-bottom: 25px;
+  font-size: 1.8em;
+  color: #f9fafb;
+  border-bottom: 1px solid #374151;
+  padding-bottom: 15px;
+}
+
+/* --- ESTRUTURA DO FORMULÁRIO --- */
+.asset-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Espaço entre os campos */
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-weight: 500;
+  color: #d1d5db;
+}
+
+.form-input {
+  padding: 12px 15px;
+  background-color: #374151;
+  color: #d1d5db;
+  border: 1px solid #4b5563;
+  border-radius: 8px;
+  font-size: 1em;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #38b2ac;
+  box-shadow: 0 0 0 2px rgba(56, 178, 172, 0.4);
+}
+
+/* --- BOTÕES DE AÇÃO --- */
+.form-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+  border-top: 1px solid #374151;
+  padding-top: 20px;
+}
+
+.form-button {
+  padding: 12px 25px;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1em;
+  transition: background-color 0.2s;
+}
+
+.submit-button {
+  background-color: #38b2ac;
+}
+
+.submit-button:hover {
+  background-color: #2c9a95;
+}
+
+.cancel-button {
+  background-color: #6b7280;
+}
+
+.cancel-button:hover {
+  background-color: #4b5563;
+}

@@ -1,42 +1,90 @@
-import react from "react"
-import {BrowserRouter, Routes, Route, Navigate} from "react-router-dom"
-import Login from "./pages/Login"
-import Register from "./pages/Register"
-import Home from "./pages/Home"
-import NotFound from "./pages/NotFound"
-import ProtectedRoutes from "./components/ProtectedRoute"
+import react from "react";
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
+import { Toaster } from 'react-hot-toast'; // Importa o Toaster
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Home from "./pages/Home";
+import NotFound from "./pages/NotFound";
+import ProtectedRoute from "./components/ProtectedRoute";
+import AssetList from "./pages/AssetList";
+import AssetForm from "./pages/AssetForm";
+import Sidebar from "./components/Sidebar";
+import AuthLayout from "./components/AuthLayout";
+import FieldManager from "./pages/FieldManager";
 
-// FUNÇÃO PARA FAZER LOGOUT DO USUÁRIO
+const AppLayout = () => (
+  <>
+    <Sidebar />
+    <main className="main-content">
+      <Outlet /> 
+    </main>
+  </>
+);
+
 function Logout() {
-  localStorage.clear()
-  return <Navigate to="/login"/>
+  localStorage.clear();
+  return <Navigate to="/login" />;
 }
 
 function RegisterAndLogout() {
-  localStorage.clear()
-  return <Register />
+  localStorage.clear();
+  return <Register />;
 }
 
 function App() {
   return (
     <BrowserRouter>
+      {/* --- CONFIGURAÇÃO DO TOASTER --- */}
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          // Estilos para o tema escuro
+          style: {
+            background: '#1f2937',
+            color: '#f9fafb',
+            border: '1px solid #374151',
+          },
+          // Estilos para notificações de sucesso
+          success: {
+            iconTheme: {
+              primary: '#38b2ac',
+              secondary: '#f9fafb',
+            },
+          },
+          // Estilos para notificações de erro
+          error: {
+            iconTheme: {
+              primary: '#ef4444',
+              secondary: '#f9fafb',
+            },
+          },
+        }}
+      />
       <Routes>
-        <Route
-          path="/"
-          element={
-            // Só será possível entrar na homepage se ele estiver autenticado por conta do ProtectedRoute
-            <ProtectedRoutes> 
-              <Home />
-            </ProtectedRoutes>
-          }
-        />
-        <Route path="/login" element={<Login />} />
+        <Route element={<AuthLayout />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<RegisterAndLogout />} />
+        </Route>
+        
         <Route path="/logout" element={<Logout />} />
-        <Route path="/register" element={<RegisterAndLogout />} />
         <Route path="*" element={<NotFound />} />
+
+        <Route 
+          element={
+            <ProtectedRoute>
+              <AppLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="/" element={<Home />} />
+          <Route path="/category/:categoryId" element={<AssetList />} />
+          <Route path="/category/:categoryId/manage" element={<FieldManager />} />
+          <Route path="/category/:categoryId/new-asset" element={<AssetForm />} />
+          <Route path="/edit-asset/:assetId" element={<AssetForm />} />
+        </Route>
       </Routes>
     </BrowserRouter>
-  )
+  );
 }
 
-export default App
+export default App;

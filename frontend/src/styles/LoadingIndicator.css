@@ -5,12 +5,12 @@
 }
 
 .loader {
-  border: 5px solid #f3f3f3; /* Cinza claro */
-  border-top: 5px solid #3498db; /* Azul */
+  border: 5px solid #4a5568; /* Cinza escuro */
+  border-top: 5px solid #38b2ac; /* Ciano */
   border-radius: 50%;
   width: 50px;
   height: 50px;
-  animation: spin 2s linear infinite;
+  animation: spin 1.5s linear infinite;
 }
 
 @keyframes spin {

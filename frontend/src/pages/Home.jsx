@@ -6,51 +6,31 @@ import "../styles/Home.css";
 import OverflowMenu from '../components/OverflowMenu';
 import ConfirmationModal from "../components/ConfirmationModal";
 
-// --- Definição do Componente Home ---
 function Home() {
-  // --- Estados do Componente ---
-
-  // Armazena a lista de categorias buscada da API.
   const [categories, setCategories] = useState([]);
-  // Armazena o valor do campo de input para criar uma nova categoria.
   const [name, setName] = useState("");
-  // Hook para redirecionar o usuário para outras páginas.
   const navigate = useNavigate();
-  // Controla a visibilidade do modal de confirmação de exclusão.
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // Armazena a categoria que o usuário selecionou para deletar.
   const [categoryToDelete, setCategoryToDelete] = useState(null);
 
-  // --- Efeito Colateral para Busca Inicial de Dados ---
-
-  // `useEffect` com um array de dependências vazio `[]` executa esta função
-  // apenas uma vez, quando o componente é montado pela primeira vez.
   useEffect(() => {
-    // AbortController é usado para cancelar a requisição da API caso o componente
-    // seja desmontado antes da resposta chegar, evitando memory leaks.
     const controller = new AbortController();
     api
-      .get("/api/categories/", { signal: controller.signal }) // Passa o sinal para a requisição.
+      .get("/api/categories/", { signal: controller.signal })
       .then((res) => {
-        // Se a requisição for bem-sucedida, atualiza o estado com as categorias recebidas.
         setCategories(res.data);
       })
       .catch((err) => {
-        // Se ocorrer um erro, verifica se não foi um erro de cancelamento.
         if (err.name !== "CanceledError") {
           toast.error("Não foi possível carregar as categorias.");
         }
       });
 
-    // Função de limpeza: será chamada quando o componente for desmontado.
     return () => {
-      controller.abort(); // Cancela a requisição pendente.
+      controller.abort();
     };
-  }, []); // O array vazio garante que o efeito só rode na montagem.
+  }, []);
 
-  // --- Funções Auxiliares ---
-
-  // Função para recarregar a lista de categorias. Útil após criar ou deletar.
   const getCategories = () => {
     api
       .get("/api/categories/")
@@ -60,31 +40,48 @@ function Home() {
       .catch((err) => toast.error("Não foi possível recarregar as categorias."));
   };
   
-  // Abre o modal de confirmação para deletar uma categoria.
   const handleOpenDeleteModal = (category) => {
-    setCategoryToDelete(category); // Guarda a categoria a ser deletada.
-    setIsModalOpen(true);          // Abre o modal.
+    setCategoryToDelete(category);
+    setIsModalOpen(true);
   };
 
-  // Executa a exclusão após o usuário confirmar no modal.
   const handleConfirmDelete = () => {
-    if (!categoryToDelete) return; // Segurança: não faz nada se nenhuma categoria foi selecionada.
+    if (!categoryToDelete) return;
 
-    // `toast.promise` mostra automaticamente toasts de 'loading', 'success' e 'error'.
     toast.promise(
-      api.delete(`/api/categories/${categoryToDelete.id}/`), // A promessa a ser resolvida.
+      api.delete(`/api/categories/${categoryToDelete.id}/`),
       {
         loading: 'Deletando categoria...',
         success: () => {
-          // Ações a serem executadas em caso de sucesso:
-          getCategories();         // Recarrega a lista de categorias.
-          setIsModalOpen(false);   // Fecha o modal.
-          setCategoryToDelete(null); // Limpa o estado.
-          return "Categoria deletada com sucesso!"; // Mensagem do toast de sucesso.
+          getCategories();
+          setIsModalOpen(false);
+          setCategoryToDelete(null);
+          return "Categoria deletada com sucesso!";
         },
-        error: "Não foi possível deletar a categoria." // Mensagem do toast de erro.
+        error: "Não foi possível deletar a categoria."
       }
     );
+  };
+  
+  const createCategory = (e) => {
+    e.preventDefault();
+    const loadingToast = toast.loading("Criando categoria...");
+    api
+      .post("/api/categories/", { name })
+      .then((res) => {
+        toast.dismiss(loadingToast);
+        if (res.status === 201) {
+          toast.success("Categoria criada!");
+          setName("");
+          getCategories();
+        } else {
+          toast.error("Falha ao criar categoria.");
+        }
+      })
+      .catch((err) => {
+        toast.dismiss(loadingToast);
+        toast.error(err.response?.data?.name?.[0] || "Erro desconhecido ao criar.");
+      });
   };
   
   return (

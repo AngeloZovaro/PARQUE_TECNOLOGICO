@@ -1,45 +1,50 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
-# O modelo Categoria armazena os tipos de ativos, como "Notebooks" ou "Câmeras".
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="categories")
+    def __str__(self): return self.name
 
-    def __str__(self):
-        return self.name
-
-# O modelo FieldDefinition define os campos customizáveis para uma categoria.
-# Ex: Para a categoria "Notebooks", podemos ter campos como "Processador", "Memória RAM".
 class FieldDefinition(models.Model):
-    FIELD_TYPE_CHOICES = [
-        ('text', 'Texto'),
-        ('number', 'Número'),
-        ('date', 'Data'),
-    ]
+    FIELD_TYPE_CHOICES = [('text', 'Texto'), ('number', 'Número'), ('date', 'Data')]
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='field_definitions')
     name = models.CharField(max_length=100)
     field_type = models.CharField(max_length=20, choices=FIELD_TYPE_CHOICES, default='text')
+    def __str__(self): return f"{self.category.name} - {self.name}"
 
-    def __str__(self):
-        return f"{self.category.name} - {self.name}"
-
-# O modelo Asset representa um ativo individual.
 class Asset(models.Model):
-    patrimonio = models.CharField(max_length=100, unique=True) # Campo obrigatório
+    patrimonio = models.CharField(max_length=100, unique=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='assets')
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="assets")
     created_at = models.DateTimeField(auto_now_add=True)
+    def __str__(self): return self.patrimonio
 
-    def __str__(self):
-        return self.patrimonio
-
-# Armazena o valor de um campo específico para um ativo.
-# Ex: Para o Ativo "Notebook Dell" (patrimônio 12345), o campo "Memória RAM" pode ter o valor "16GB".
 class AssetFieldValue(models.Model):
     asset = models.ForeignKey(Asset, on_delete=models.CASCADE, related_name='field_values')
     field_definition = models.ForeignKey(FieldDefinition, on_delete=models.CASCADE)
     value = models.TextField()
+    def __str__(self): return f"{self.asset.patrimonio} - {self.field_definition.name}: {self.value}"
+
+class Profile(models.Model):
+    ROLE_CHOICES = (
+        ('viewer', 'Visualizador'),
+        ('editor', 'Editor'),
+        ('admin', 'Administrador'),
+    )
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    secret_question = models.CharField(max_length=255, blank=True, null=True)
+    secret_answer = models.CharField(max_length=128, blank=True, null=True)
+    # Define o papel do usuário, com "Visualizador" como padrão.
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='viewer')
 
     def __str__(self):
-        return f"{self.asset.patrimonio} - {self.field_definition.name}: {self.value}"
+        return f"{self.user.username} - {self.get_role_display()}"
+
+# Este "signal" garante que um Profile seja criado automaticamente sempre que um novo User for registrado
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)

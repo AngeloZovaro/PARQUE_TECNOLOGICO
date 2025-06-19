@@ -1,5 +1,3 @@
-// --- Importações de Módulos e Componentes ---
-
 import { useState } from "react";
 import api from "../api";
 import { useNavigate, Link } from "react-router-dom";
@@ -21,6 +19,8 @@ function Form({ route, method }) {
   // Estado para armazenar a senha digitada.
   const [password, setPassword] = useState("");
   // Estado para controlar a exibição do indicador de carregamento durante a requisição.
+  const [secretQuestion, setSecretQuestion] = useState("");
+  const [secretAnswer, setSecretAnswer] = useState("");
   const [loading, setLoading] = useState(false);
   // Hook do React Router para permitir a navegação programática para outras rotas.
   const navigate = useNavigate();
@@ -38,32 +38,26 @@ function Form({ route, method }) {
     // Previne o comportamento padrão do formulário, que é recarregar a página.
     e.preventDefault();
 
-    // O bloco 'try...catch...finally' é usado para lidar com a chamada assíncrona da API.
     try {
-      // Faz uma requisição POST para a 'route' especificada, enviando 'username' e 'password'.
-      // `await` pausa a execução da função até que a promessa da API seja resolvida.
-      const res = await api.post(route, { username, password });
+      // Prepara os dados a serem enviados
+      const data = { username, password };
+      if (method === "register") {
+        data.secret_question = secretQuestion;
+        data.secret_answer = secretAnswer;
+      }
 
-      // Se o método for "login", a API deve retornar os tokens de acesso.
+      const res = await api.post(route, data);
+      
       if (method === "login") {
-        // Armazena o token de acesso no localStorage do navegador.
         localStorage.setItem(ACCESS_TOKEN, res.data.access);
-        // Armazena o token de atualização (refresh token) no localStorage.
         localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
-        // Redireciona o usuário para a página inicial ("/") após o login bem-sucedido.
         navigate("/");
       } else {
-        // Se o método for "register", o usuário foi criado com sucesso.
-        // Redireciona o usuário para a página de login para que ele possa entrar.
         navigate("/login/");
       }
     } catch (error) {
-      // Se ocorrer um erro na requisição (ex: credenciais inválidas, erro no servidor),
-      // ele será capturado aqui.
-      alert(error); // Exibe um alerta simples com a mensagem de erro.
+      alert(error);
     } finally {
-      // O bloco 'finally' sempre será executado, independentemente de sucesso ou erro.
-      // Desativa o estado de carregamento, escondendo o LoadingIndicator.
       setLoading(false);
     }
   };
@@ -72,8 +66,7 @@ function Form({ route, method }) {
     <form onSubmit={handleSubmit} className="form-container">
       <h1>{name}</h1>
       <p className="form-description">
-        Bem-vindo ao Sistema de Controle de Ativos. Gerencie seu inventário de
-        forma fácil e flexível.
+        Bem-vindo ao Sistema de Controle de Ativos. Gerencie seu inventário de forma fácil e flexível.
       </p>
 
       <input
@@ -82,6 +75,7 @@ function Form({ route, method }) {
         value={username}
         onChange={(e) => setUsername(e.target.value)}
         placeholder="Username"
+        required
       />
       <input
         className="form-input"
@@ -89,23 +83,53 @@ function Form({ route, method }) {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         placeholder="Password"
+        required
       />
+
+      {/* --- Novos campos exibidos apenas no registro --- */}
+      {method === "register" && (
+        <>
+          <input
+            className="form-input"
+            type="text"
+            value={secretQuestion}
+            onChange={(e) => setSecretQuestion(e.target.value)}
+            placeholder="Digite uma pergunta secreta (ex: nome do seu pet?)"
+            required
+          />
+          <input
+            className="form-input"
+            type="text"
+            value={secretAnswer}
+            onChange={(e) => setSecretAnswer(e.target.value)}
+            placeholder="Digite a resposta secreta"
+            required
+          />
+        </>
+      )}
+
       {loading && <LoadingIndicator />}
       <button className="form-button" type="submit">
         {name}
       </button>
 
-      <p className="form-toggle">
+      <div className="form-links">
         {method === "login" ? (
-          <>
+          <p className="form-toggle">
             Ainda não tem uma conta? <Link to="/register">Registre-se</Link>
-          </>
+          </p>
         ) : (
-          <>
+          <p className="form-toggle">
             Já possui uma conta? <Link to="/login">Faça o login</Link>
-          </>
+          </p>
         )}
-      </p>
+        {/* --- Link para "Esqueceu a senha?" --- */}
+        {method === "login" && (
+            <p className="form-toggle">
+                <Link to="/forgot-password">Esqueceu a senha?</Link>
+            </p>
+        )}
+      </div>
     </form>
   );
 }

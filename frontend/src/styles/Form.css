@@ -43,8 +43,6 @@
 .form-toggle a:hover {
   text-decoration: underline;
 }
-/* --- FIM DOS NOVOS ESTILOS --- */
-
 
 .form-input {
   width: 100%;
@@ -90,4 +88,29 @@
   justify-content: center;
   align-items: center;
   padding: 10px 0;
+}
+
+.form-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px; /* Espaço entre os links */
+  margin-top: 10px;
+}
+
+.form-toggle {
+  color: #a0aec0;
+  text-align: center;
+  font-size: 0.9em;
+  margin: 0; /* Remove margem padrão do <p> */
+}
+
+.form-toggle a {
+  color: #38b2ac;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.form-toggle a:hover {
+  text-decoration: underline;
 }

@@ -1,6 +1,6 @@
 import react from "react";
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
-import { Toaster } from 'react-hot-toast'; // Importa o Toaster
+import { Toaster } from 'react-hot-toast';
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
@@ -11,6 +11,7 @@ import AssetForm from "./pages/AssetForm";
 import Sidebar from "./components/Sidebar";
 import AuthLayout from "./components/AuthLayout";
 import FieldManager from "./pages/FieldManager";
+import ForgotPassword from './pages/ForgotPassword';
 
 const AppLayout = () => (
   <>
@@ -60,10 +61,12 @@ function App() {
           },
         }}
       />
+
       <Routes>
         <Route element={<AuthLayout />}>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<RegisterAndLogout />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
         </Route>
         
         <Route path="/logout" element={<Logout />} />

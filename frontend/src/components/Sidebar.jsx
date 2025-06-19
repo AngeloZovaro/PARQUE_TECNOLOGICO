@@ -1,14 +1,14 @@
 import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import '../styles/Sidebar.css';
-// Importando os ícones que vamos usar
+// Importando os ícones
 import { LuLayoutDashboard, LuArchive, LuLogOut } from "react-icons/lu";
 
 function Sidebar() {
   return (
     <div className="sidebar">
       <div className="sidebar-header">
-        {/* Você pode colocar seu logo aqui */}
+        {/* pode colocar um logo aqui */}
         <span className="sidebar-logo">CA</span> 
         <span>Controle de Ativos</span>
       </div>
